@@ -18,8 +18,8 @@ module PowerIterations
 			mul!(w, A, v)
 			v, w = w, v
 		end
-		λ = norm(v)
-		v ./= λ
+		λ = Float64(w' * v)
+		v ./= norm(v)
 		return v, λ
 	end
 
@@ -39,8 +39,9 @@ module PowerIterations
 			mul!(V, A, Matrix(F.Q))
 		end
 		F = qr(V)
-		λ = sqrt.(sum(abs2, V; dims=1))
-		V ./= λ
+		V = F.Q
+		λ = convert.(Float64, diag(F.R))
+		V ./= sqrt.(sum(abs2, V; dims=1))
 		return V, dropdims(λ; dims=1)
 	end
 
